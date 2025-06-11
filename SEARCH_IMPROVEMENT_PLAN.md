@@ -60,10 +60,10 @@
 - **Detección automática**: Distingue entre búsqueda por texto y referencias bíblicas
 - **Tiempo real**: Búsqueda con debounce de 300ms para mejor performance
 - **Parser robusto**: Maneja múltiples formatos de referencia:
-  - `Juan 3:16` (referencia completa)
-  - `Jn 3:16` (abreviatura)
-  - `Juan 3` (capítulo completo)
-  - `Juan 3:16-20` (rango de versículos)
+  - `Juan 3,16` (referencia completa - nomenclatura católica)
+- `Jn 3,16` (abreviatura - nomenclatura católica)
+- `Juan 3` (capítulo completo)
+- `Juan 3,16-20` (rango de versículos - nomenclatura católica)
 
 #### 💡 **Sugerencias Automáticas**
 - **Historial personal**: Muestra las últimas búsquedas del usuario autenticado
@@ -136,14 +136,21 @@ const SEARCH_CONFIG = {
 ```
 
 ### **Patrones de Referencias Soportados:**
+
+> **📋 Nota Importante**: Se utiliza la **nomenclatura católica hispanohablante** que emplea **coma (,)** para separar capítulos y versículos, no dos puntos (:) como en la tradición protestante o angloparlante.
+
 ```typescript
 const referencePatterns = [
-  /^\d*\s*[A-Za-z]+\s+\d+:\d+/,  // Juan 3:16
+  /^\d*\s*[A-Za-z]+\s+\d+,\d+/,  // Juan 3,16 (nomenclatura católica)
   /^\d*\s*[A-Za-z]+\s+\d+/,      // Juan 3
-  /^[A-Za-z]+\s+\d+:\d+/,        // Jn 3:16
+  /^[A-Za-z]+\s+\d+,\d+/,        // Jn 3,16 (nomenclatura católica)
   /^[A-Za-z]+\s+\d+/             // Jn 3
 ]
 ```
+
+**Ejemplos de nomenclatura correcta:**
+- ✅ **Católica**: `Juan 3,16` `Mateo 5,3-16` `Salmo 23,1`
+- ❌ **Protestante**: `Juan 3:16` `Mateo 5:3-16` `Salmo 23:1`
 
 ---
 
@@ -183,10 +190,10 @@ const referencePatterns = [
 
 ### **Casos de Prueba Implementados:**
 - [x] Búsqueda por texto simple ("amor")
-- [x] Búsqueda por referencia completa ("Juan 3:16")
-- [x] Búsqueda por referencia abreviada ("Jn 3:16")
+- [x] Búsqueda por referencia completa ("Juan 3,16" - nomenclatura católica)
+- [x] Búsqueda por referencia abreviada ("Jn 3,16" - nomenclatura católica)
 - [x] Búsqueda por capítulo ("Juan 3")
-- [x] Búsqueda con rango ("Juan 3:16-20")
+- [x] Búsqueda con rango ("Juan 3,16-20" - nomenclatura católica)
 - [x] Manejo de búsquedas sin resultados
 - [x] Manejo de errores de red
 - [x] Responsive en móviles

@@ -48,9 +48,9 @@ export default function BuscarPage() {
   // Función para detectar si es una referencia bíblica
   const detectSearchType = useCallback((query: string): 'text' | 'reference' => {
     const referencePatterns = [
-      /^\d*\s*[A-Za-z]+\s+\d+:\d+/,  // Juan 3:16
+      /^\d*\s*[A-Za-z]+\s+\d+,\d+/,  // Juan 3,16 (nomenclatura católica)
       /^\d*\s*[A-Za-z]+\s+\d+/,      // Juan 3
-      /^[A-Za-z]+\s+\d+:\d+/,        // Jn 3:16
+      /^[A-Za-z]+\s+\d+,\d+/,        // Jn 3,16 (nomenclatura católica)
       /^[A-Za-z]+\s+\d+/             // Jn 3
     ]
     
@@ -175,7 +175,7 @@ export default function BuscarPage() {
             Búsqueda Inteligente
           </h1>
           <p className="text-lg text-muted-foreground">
-                         Encuentra versículos por palabras clave o referencias específicas (ej: &quot;Juan 3:16&quot;, &quot;amor&quot;, &quot;esperanza&quot;)
+                         Encuentra versículos por palabras clave o referencias específicas (ej: &quot;Juan 3,16&quot;, &quot;amor&quot;, &quot;esperanza&quot;)
           </p>
         </div>
 
@@ -184,7 +184,7 @@ export default function BuscarPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Buscar versículos, referencias (ej: Juan 3:16)..."
+              placeholder="Buscar versículos, referencias (ej: Juan 3,16)..."
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value)
@@ -351,7 +351,7 @@ export default function BuscarPage() {
                 </p>
                 <div className="text-sm text-muted-foreground space-y-1">
                   <p><strong>Ejemplos de búsqueda:</strong></p>
-                                     <p>• Por referencia: &quot;Juan 3:16&quot;, &quot;Génesis 1:1&quot;, &quot;Sal 23&quot;</p>
+                                     <p>• Por referencia: &quot;Juan 3,16&quot;, &quot;Génesis 1,1&quot;, &quot;Sal 23&quot;</p>
                    <p>• Por texto: &quot;amor&quot;, &quot;esperanza&quot;, &quot;fe&quot;</p>
                 </div>
               </div>
@@ -374,7 +374,7 @@ export default function BuscarPage() {
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">Ejemplos populares:</p>
               <div className="flex flex-wrap gap-2 justify-center">
-                {['Juan 3:16', 'Sal 23', 'amor', 'esperanza', 'fe'].map((example) => (
+                {['Juan 3,16', 'Sal 23', 'amor', 'esperanza', 'fe'].map((example) => (
                   <Button
                     key={example}
                     variant="outline"

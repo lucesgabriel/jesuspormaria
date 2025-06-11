@@ -307,15 +307,15 @@ export async function searchByReference(reference: string): Promise<SearchResult
 // Parser de referencias bíblicas
 function parseReference(reference: string): BiblicalReference | null {
   try {
-    // Patrones para referencias bíblicas
+    // Patrones para referencias bíblicas según nomenclatura católica (usa coma, no dos puntos)
     const patterns = [
-      // "Juan 3:16" o "Jn 3:16"
-      /^(\w+)\s+(\d+):(\d+)$/,
-      // "Juan 3:16-20"
-      /^(\w+)\s+(\d+):(\d+)-(\d+)$/,
-      // "Juan 3" 
+      // "Juan 3,16" o "Jn 3,16" (referencia completa)
+      /^(\w+)\s+(\d+),(\d+)$/,
+      // "Juan 3,16-20" (rango de versículos)
+      /^(\w+)\s+(\d+),(\d+)-(\d+)$/,
+      // "Juan 3" (capítulo completo)
       /^(\w+)\s+(\d+)$/,
-      // "Juan"
+      // "Juan" (libro completo)
       /^(\w+)$/
     ]
 
