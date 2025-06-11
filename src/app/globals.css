@@ -174,3 +174,208 @@
     }
   }
 }
+
+/* NUEVOS ESTILOS PARA LECTURA BÍBLICA */
+@layer components {
+  /* Mejoras tipográficas para lectura prolongada */
+  .bible-text {
+    font-feature-settings: "kern" 1, "liga" 1, "clig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    font-variant-ligatures: common-ligatures contextual;
+    font-kerning: normal;
+  }
+
+  /* Optimización de contraste para texto bíblico */
+  .bible-verse {
+    color: hsl(var(--foreground));
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .bible-verse {
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Mejoras para números de versículo */
+  .verse-number {
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+
+  .verse-number:hover {
+    background: hsl(var(--accent));
+    color: hsl(var(--accent-foreground));
+    transform: scale(1.1);
+  }
+
+  /* Espaciado optimizado para lectura */
+  .verse-spacing-tight {
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  .verse-spacing-comfortable {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .verse-spacing-relaxed {
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Mejoras para vista continua */
+  .continuous-reading {
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    hyphenate-limit-chars: 6 3 3;
+    hyphenate-limit-lines: 2;
+    hyphenate-limit-last: always;
+    hyphenate-limit-zone: 8%;
+  }
+
+  @media (max-width: 768px) {
+    .continuous-reading {
+      text-align: left;
+      hyphens: none;
+    }
+  }
+
+  /* Highlight mejorado para búsquedas */
+  .search-highlight {
+    background: linear-gradient(120deg, #fbbf24 0%, #f59e0b 100%);
+    color: #92400e;
+    padding: 0.125rem 0.25rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-weight: 500;
+  }
+
+  .dark .search-highlight {
+    background: linear-gradient(120deg, #d97706 0%, #b45309 100%);
+    color: #fbbf24;
+  }
+
+  /* Animaciones suaves para transiciones */
+  .verse-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .verse-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .verse-hover:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .verse-hover:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Controles de lectura flotantes */
+  .reading-controls {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  }
+
+  .dark .reading-controls {
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Mejoras para accesibilidad en lectura */
+  .high-contrast {
+    filter: contrast(150%);
+  }
+
+  .focus-reading {
+    background: hsl(var(--muted) / 0.5);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 4px solid hsl(var(--primary));
+  }
+
+  /* Estados de favoritos mejorados */
+  .favorite-indicator {
+    position: relative;
+  }
+
+  .favorite-indicator::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -8px;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ef4444, #dc2626);
+    border-radius: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .favorite-indicator.is-favorite::after {
+    opacity: 1;
+  }
+
+  /* Mejoras para texto seleccionable */
+  .selectable-text {
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+  }
+
+  /* Optimizaciones para scroll suave */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+  }
+
+  /* Mejoras para loading states */
+  .verse-skeleton {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+  }
+
+  .dark .verse-skeleton {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background-size: 200% 100%;
+  }
+
+  @keyframes skeleton-loading {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* Responsive typography enhancements */
+  @media (max-width: 640px) {
+    .verse-text {
+      font-size: clamp(0.875rem, 2.5vw, 1rem);
+      line-height: 1.6;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .verse-text {
+      font-size: clamp(1rem, 2vw, 1.125rem);
+      line-height: 1.7;
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .verse-text {
+      font-size: clamp(1.125rem, 1.5vw, 1.25rem);
+      line-height: 1.8;
+    }
+  }
+}
