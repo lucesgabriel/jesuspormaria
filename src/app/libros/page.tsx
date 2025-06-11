@@ -1,13 +1,10 @@
-import { Header } from '@/components/layout/header'
 import { BookSelector } from '@/components/biblia/book-selector'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { BookOpen } from 'lucide-react'
 
 export default function LibrosPage() {
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="text-center mb-8">
@@ -58,7 +55,6 @@ export default function LibrosPage() {
             </Card>
           </div>
         </div>
-      </main>
-    </>
+    </div>
   )
 } 

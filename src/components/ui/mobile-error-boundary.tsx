@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { RefreshCw, Smartphone, Wifi, WifiOff } from 'lucide-react'
+import { RefreshCw, Smartphone, Wifi, WifiOff, AlertTriangle } from 'lucide-react'
 
 interface MobileErrorBoundaryProps {
   children: React.ReactNode
@@ -11,7 +11,7 @@ interface MobileErrorBoundaryProps {
 interface ErrorBoundaryState {
   hasError: boolean
   errorMessage: string
-  errorType: 'network' | 'rsc' | 'mobile' | 'general'
+  errorType: 'network' | 'rsc' | 'mobile' | 'csp' | 'worker' | 'general'
 }
 
 export class MobileErrorBoundary extends React.Component<
@@ -36,8 +36,18 @@ export class MobileErrorBoundary extends React.Component<
     let errorType: ErrorBoundaryState['errorType'] = 'general'
     let friendlyMessage = 'Ha ocurrido un error inesperado'
     
+    // Errores específicos de CSP
+    if (errorMessage.includes('content security policy') || errorMessage.includes('csp')) {
+      errorType = 'csp'
+      friendlyMessage = 'Error de política de seguridad'
+    }
+    // Errores de workers/blob
+    else if (errorMessage.includes('worker') || errorMessage.includes('blob:')) {
+      errorType = 'worker'
+      friendlyMessage = 'Error de procesamiento en segundo plano'
+    }
     // Errores de RSC payload
-    if (errorMessage.includes('rsc payload') || errorMessage.includes('failed to fetch')) {
+    else if (errorMessage.includes('rsc payload') || errorMessage.includes('failed to fetch')) {
       errorType = 'rsc'
       friendlyMessage = 'Error de conexión al servidor'
     }
@@ -83,7 +93,8 @@ export class MobileErrorBoundary extends React.Component<
         connection: (navigator as any).connection?.effectiveType || 'unknown',
         online: navigator.onLine,
         url: window.location.href,
-        referrer: document.referrer
+        referrer: document.referrer,
+        isStandalone: window.matchMedia('(display-mode: standalone)').matches
       }
       
       console.log('Device info when error occurred:', deviceInfo)
@@ -103,6 +114,14 @@ export class MobileErrorBoundary extends React.Component<
         })
       }
       
+      // Limpiar localStorage problemático
+      try {
+        localStorage.removeItem('clerk-db')
+        sessionStorage.clear()
+      } catch (e) {
+        console.log('No se pudo limpiar el storage:', e)
+      }
+      
       // Recargar la página
       window.location.reload()
     }
@@ -112,6 +131,34 @@ export class MobileErrorBoundary extends React.Component<
     this.setState({ hasError: false, errorMessage: '', errorType: 'general' })
   }
 
+  clearBrowserData = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        // Limpiar todos los datos del navegador
+        localStorage.clear()
+        sessionStorage.clear()
+        
+        // Limpiar cookies de Clerk
+        document.cookie.split(";").forEach(function(c) { 
+          document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+        
+        // Limpiar cache si es posible
+        if ('caches' in window) {
+          caches.keys().then(names => {
+            names.forEach(name => caches.delete(name))
+          })
+        }
+        
+        // Recargar después de limpiar
+        setTimeout(() => window.location.reload(), 1000)
+      } catch (e) {
+        console.error('Error limpiando datos del navegador:', e)
+        window.location.reload()
+      }
+    }
+  }
+
   getIcon = () => {
     switch (this.state.errorType) {
       case 'network':
@@ -119,6 +166,9 @@ export class MobileErrorBoundary extends React.Component<
         return <WifiOff className="h-16 w-16 text-muted-foreground" />
       case 'mobile':
         return <Smartphone className="h-16 w-16 text-muted-foreground" />
+      case 'csp':
+      case 'worker':
+        return <AlertTriangle className="h-16 w-16 text-muted-foreground" />
       default:
         return <RefreshCw className="h-16 w-16 text-muted-foreground" />
     }
@@ -126,6 +176,14 @@ export class MobileErrorBoundary extends React.Component<
 
   getTroubleshootingTips = () => {
     switch (this.state.errorType) {
+      case 'csp':
+      case 'worker':
+        return [
+          '• Actualizar la página para aplicar nuevas políticas',
+          '• Limpiar datos del navegador',
+          '• Desactivar extensiones del navegador',
+          '• Usar modo incógnito temporalmente'
+        ]
       case 'network':
       case 'rsc':
         return [
@@ -165,6 +223,8 @@ export class MobileErrorBoundary extends React.Component<
                 {this.state.errorMessage}
               </h1>
               <p className="text-muted-foreground">
+                {this.state.errorType === 'csp' && 'Problema con políticas de seguridad del navegador.'}
+                {this.state.errorType === 'worker' && 'Error en procesamiento de fondo.'}
                 {this.state.errorType === 'rsc' && 'Problema de comunicación con el servidor.'}
                 {this.state.errorType === 'network' && 'Revisa tu conexión a internet.'}
                 {this.state.errorType === 'mobile' && 'Problema de visualización en tu dispositivo.'}
@@ -192,6 +252,17 @@ export class MobileErrorBoundary extends React.Component<
                 </Button>
               </div>
               
+              {(this.state.errorType === 'csp' || this.state.errorType === 'worker') && (
+                <Button 
+                  onClick={this.clearBrowserData} 
+                  variant="destructive"
+                  className="w-full"
+                >
+                  <AlertTriangle className="mr-2 h-4 w-4" />
+                  Limpiar Datos del Navegador
+                </Button>
+              )}
+              
               <div className="text-sm text-muted-foreground space-y-2">
                 <p className="font-medium">Si el problema persiste:</p>
                 <ul className="text-left space-y-1">
@@ -210,7 +281,8 @@ export class MobileErrorBoundary extends React.Component<
                 <pre className="mt-2 whitespace-pre-wrap">
                   Error Type: {this.state.errorType}{'\n'}
                   User Agent: {typeof window !== 'undefined' ? navigator.userAgent : 'N/A'}{'\n'}
-                  Online: {typeof window !== 'undefined' ? navigator.onLine : 'N/A'}
+                  Online: {typeof window !== 'undefined' ? navigator.onLine : 'N/A'}{'\n'}
+                  Viewport: {typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : 'N/A'}
                 </pre>
               </details>
             )}

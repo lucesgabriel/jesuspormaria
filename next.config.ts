@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
-  // Configuración para dispositivos móviles y cross-origin
+  // Headers básicos (CSP se maneja en middleware.ts)
   async headers() {
     return [
       {
@@ -15,19 +15,6 @@ const nextConfig: NextConfig = {
           {
             key: 'X-Frame-Options',
             value: 'SAMEORIGIN'
-          },
-          {
-            key: 'Content-Security-Policy',
-            value: [
-              "default-src 'self' 'unsafe-inline' 'unsafe-eval'",
-              "*.clerk.accounts.dev *.clerk.dev *.clerk.com clerk-telemetry.com",
-              "*.supabase.co *.supabase.io",
-              "data: blob:",
-              "connect-src 'self' *.clerk.accounts.dev *.clerk.dev *.clerk.com clerk-telemetry.com *.supabase.co *.supabase.io ws: wss:",
-              "img-src 'self' data: blob: *.clerk.accounts.dev *.clerk.dev",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' *.clerk.accounts.dev *.clerk.dev",
-              "style-src 'self' 'unsafe-inline'"
-            ].join('; ')
           },
           {
             key: 'X-Content-Type-Options',
@@ -40,6 +27,14 @@ const nextConfig: NextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin'
+          },
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'unsafe-none'
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin-allow-popups'
           }
         ]
       }
@@ -47,9 +42,10 @@ const nextConfig: NextConfig = {
   },
   // Configuración experimental para mejor compatibilidad móvil
   experimental: {
-    esmExternals: true,
-    serverComponentsExternalPackages: ['@supabase/supabase-js']
-  }
+    esmExternals: true
+  },
+  // Configuración específica para evitar errores RSC en móviles
+  serverExternalPackages: ['@supabase/supabase-js']
 };
 
 export default nextConfig;

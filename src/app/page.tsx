@@ -5,8 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Header } from '@/components/layout/header'
-
 import { BookOpen, Search, BarChart3, Heart } from 'lucide-react'
 
 export default function Home() {
@@ -26,9 +24,7 @@ export default function Home() {
   ]
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
         {/* Hero Section */}
         <section className="container mx-auto px-4 py-16 text-center">
           <div className="max-w-4xl mx-auto space-y-8">
@@ -212,9 +208,8 @@ export default function Home() {
                 </p>
               </div>
             </div>
-        </div>
+          </div>
         </section>
-      </main>
-    </>
+    </div>
   )
 }

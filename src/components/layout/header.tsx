@@ -5,7 +5,7 @@ import { useUser, UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Book, Search, Menu, Home, Heart } from 'lucide-react'
 import { useState } from 'react'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 
 export function Header() {
   const { isSignedIn, user } = useUser()
@@ -100,6 +100,9 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetHeader className="sr-only">
+                <SheetTitle>Menú de navegación</SheetTitle>
+              </SheetHeader>
               <nav className="flex flex-col space-y-4">
                 <div className="flex items-center space-x-2 pb-4">
                   <Book className="h-6 w-6 text-primary" />

@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useUser } from '@clerk/nextjs'
 import Link from 'next/link'
-import { Header } from '@/components/layout/header'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -71,7 +70,7 @@ export default function FavoritesPage() {
       const verse = fav.verse
       const chapter = verse?.chapter
       const book = chapter?.book
-                    return `'${verse?.texto}' - ${book?.nombre} ${chapter?.numero}:${verse?.numero}`
+      return `'${verse?.texto}' - ${book?.nombre} ${chapter?.numero}:${verse?.numero}`
     }).join('\n\n')
 
     const blob = new Blob([text], { type: 'text/plain' })
@@ -87,157 +86,151 @@ export default function FavoritesPage() {
 
   if (!isSignedIn) {
     return (
-      <>
-        <Header />
-        <main className="container mx-auto px-4 py-16">
-          <div className="max-w-2xl mx-auto text-center">
-            <Heart className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
-            <h1 className="text-3xl font-bold mb-4">Tus Versículos Favoritos</h1>
-            <p className="text-muted-foreground mb-8">
-              Inicia sesión para guardar y gestionar tus versículos favoritos
-            </p>
-            <Button asChild>
-              <Link href="/sign-in">Iniciar Sesión</Link>
-            </Button>
-          </div>
-        </main>
-      </>
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-2xl mx-auto text-center">
+          <Heart className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
+          <h1 className="text-3xl font-bold mb-4">Tus Versículos Favoritos</h1>
+          <p className="text-muted-foreground mb-8">
+            Inicia sesión para guardar y gestionar tus versículos favoritos
+          </p>
+          <Button asChild>
+            <Link href="/sign-in">Iniciar Sesión</Link>
+          </Button>
+        </div>
+      </div>
     )
   }
 
   return (
-    <>
-      <Header />
-      <main className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Mis Favoritos</h1>
-            <p className="text-muted-foreground">
-              {favorites.length} versículo{favorites.length !== 1 ? 's' : ''} guardado{favorites.length !== 1 ? 's' : ''}
-            </p>
-          </div>
-
-          <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            {/* Buscador */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Buscar en favoritos..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 w-64"
-              />
-            </div>
-
-            {/* Exportar */}
-            {favorites.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={handleExportFavorites}
-                className="flex items-center space-x-2"
-              >
-                <FileDown className="h-4 w-4" />
-                <span>Exportar</span>
-              </Button>
-            )}
-          </div>
+    <div className="container mx-auto px-4 py-8">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Mis Favoritos</h1>
+          <p className="text-muted-foreground">
+            {favorites.length} versículo{favorites.length !== 1 ? 's' : ''} guardado{favorites.length !== 1 ? 's' : ''}
+          </p>
         </div>
 
-        {/* Loading */}
-        {isLoading && (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>Cargando favoritos...</p>
+        <div className="flex items-center space-x-4 mt-4 md:mt-0">
+          {/* Buscador */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Buscar en favoritos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 w-64"
+            />
           </div>
-        )}
 
-        {/* Empty State */}
-        {!isLoading && favorites.length === 0 && (
-          <Card className="text-center py-12">
-            <CardContent>
-              <Heart className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
-              <h3 className="text-xl font-semibold mb-2">Aún no tienes favoritos</h3>
-              <p className="text-muted-foreground mb-6">
-                Comienza a guardar versículos que te inspiren marcándolos con el corazón
-              </p>
-              <Button asChild>
-                <Link href="/">Explorar la Biblia</Link>
-              </Button>
-            </CardContent>
-          </Card>
-        )}
+          {/* Exportar */}
+          {favorites.length > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleExportFavorites}
+              className="flex items-center space-x-2"
+            >
+              <FileDown className="h-4 w-4" />
+              <span>Exportar</span>
+            </Button>
+          )}
+        </div>
+      </div>
 
-        {/* Favorites List */}
-        {!isLoading && filteredFavorites.length > 0 && (
-          <div className="space-y-4">
-            {filteredFavorites.map((favorite) => {
-              const verse = favorite.verse
-              const chapter = verse?.chapter
-              const book = chapter?.book
+      {/* Loading */}
+      {isLoading && (
+        <div className="text-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Cargando favoritos...</p>
+        </div>
+      )}
 
-              return (
-                <Card key={favorite.id} className="group hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Badge variant="outline">
-                          {book?.abreviatura} {chapter?.numero}:{verse?.numero}
-                        </Badge>
-                        <CardTitle className="text-lg">{book?.nombre}</CardTitle>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => verse?.id && handleRemoveFavorite(verse.id)}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Quitar de favoritos"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+      {/* Empty State */}
+      {!isLoading && favorites.length === 0 && (
+        <Card className="text-center py-12">
+          <CardContent>
+            <Heart className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
+            <h3 className="text-xl font-semibold mb-2">Aún no tienes favoritos</h3>
+            <p className="text-muted-foreground mb-6">
+              Comienza a guardar versículos que te inspiren marcándolos con el corazón
+            </p>
+            <Button asChild>
+              <Link href="/">Explorar la Biblia</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Favorites List */}
+      {!isLoading && filteredFavorites.length > 0 && (
+        <div className="space-y-4">
+          {filteredFavorites.map((favorite) => {
+            const verse = favorite.verse
+            const chapter = verse?.chapter
+            const book = chapter?.book
+
+            return (
+              <Card key={favorite.id} className="group hover:shadow-md transition-shadow">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <Badge variant="outline">
+                        {book?.abreviatura} {chapter?.numero}:{verse?.numero}
+                      </Badge>
+                      <CardTitle className="text-lg">{book?.nombre}</CardTitle>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-base leading-relaxed mb-4">
-                      {verse?.texto}
-                    </p>
-                    {favorite.notes && (
-                      <div className="bg-muted/50 rounded-md p-3">
-                        <p className="text-sm text-muted-foreground italic">
-                          Nota: {favorite.notes}
-                        </p>
-                      </div>
-                    )}
-                    <div className="flex justify-between items-center mt-4 text-xs text-muted-foreground">
-                      <span>
-                        Guardado: {new Date(favorite.created_at).toLocaleDateString()}
-                      </span>
-                      <Button variant="link" size="sm" asChild>
-                        <a href={`/libro/${book?.abreviatura}/${chapter?.numero}#v${verse?.numero}`}>
-                          Ver en contexto →
-                        </a>
-                      </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => verse?.id && handleRemoveFavorite(verse.id)}
+                      className="opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Quitar de favoritos"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-base leading-relaxed mb-4">
+                    {verse?.texto}
+                  </p>
+                  {favorite.notes && (
+                    <div className="bg-muted/50 rounded-md p-3">
+                      <p className="text-sm text-muted-foreground italic">
+                        Nota: {favorite.notes}
+                      </p>
                     </div>
-                  </CardContent>
-                </Card>
-              )
-            })}
-          </div>
-        )}
+                  )}
+                  <div className="flex justify-between items-center mt-4 text-xs text-muted-foreground">
+                    <span>
+                      Guardado: {new Date(favorite.created_at).toLocaleDateString()}
+                    </span>
+                    <Button variant="link" size="sm" asChild>
+                      <a href={`/libro/${book?.abreviatura}/${chapter?.numero}#v${verse?.numero}`}>
+                        Ver en contexto →
+                      </a>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+      )}
 
-        {/* No Results */}
-        {!isLoading && searchQuery && filteredFavorites.length === 0 && favorites.length > 0 && (
-          <Card className="text-center py-12">
-            <CardContent>
-              <Search className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
-              <h3 className="text-xl font-semibold mb-2">Sin resultados</h3>
-              <p className="text-muted-foreground">
-                No se encontraron favoritos que coincidan con &quot;{searchQuery}&quot;
-              </p>
-            </CardContent>
-          </Card>
-        )}
-      </main>
-    </>
+      {/* No Results */}
+      {!isLoading && searchQuery && filteredFavorites.length === 0 && favorites.length > 0 && (
+        <Card className="text-center py-12">
+          <CardContent>
+            <Search className="h-16 w-16 mx-auto mb-6 text-muted-foreground" />
+            <h3 className="text-xl font-semibold mb-2">Sin resultados</h3>
+            <p className="text-muted-foreground">
+              No se encontraron favoritos que coincidan con &quot;{searchQuery}&quot;
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   )
 } 

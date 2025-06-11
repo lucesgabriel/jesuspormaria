@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-import { Header } from '@/components/layout/header'
 import { ChapterGrid } from '@/components/biblia/chapter-grid'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -23,9 +22,7 @@ export default async function BookPage({ params }: BookPageProps) {
   }
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
         <div className="container mx-auto px-4 py-8">
           {/* Breadcrumb */}
           <div className="mb-6">
@@ -82,8 +79,7 @@ export default async function BookPage({ params }: BookPageProps) {
             </Card>
           </div>
         </div>
-      </main>
-    </>
+    </div>
   )
 }
 

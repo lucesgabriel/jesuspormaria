@@ -6,10 +6,10 @@
   "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#1a1a1a",
-  "orientation": "portrait",
+  "orientation": "portrait-primary",
   "scope": "/",
   "lang": "es",
-  "categories": ["books", "education", "lifestyle"],
+  "categories": ["books", "education", "lifestyle", "reference"],
   "icons": [
     {
       "src": "/icon-192x192.png",
@@ -30,7 +30,38 @@
       "src": "/screenshot-mobile.png",
       "sizes": "375x812",
       "type": "image/png",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "Vista principal de la aplicación"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "Búsqueda",
+      "short_name": "Buscar",
+      "description": "Buscar versículos",
+      "url": "/buscar",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Favoritos",
+      "short_name": "Favoritos",
+      "description": "Ver tus versículos favoritos",
+      "url": "/favoritos",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Libros",
+      "short_name": "Libros",
+      "description": "Explorar libros de la Biblia",
+      "url": "/libros",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  }
 } 
