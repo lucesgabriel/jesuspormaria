@@ -35,8 +35,8 @@ Una aplicación web moderna para leer la Biblia Jerusalén Católica con sistema
 
 ### 1. Clonar el repositorio
 ```bash
-git clone https://github.com/TU_USUARIO/biblia-jerusalen-catolica.git
-cd biblia-jerusalen-catolica
+git clone https://github.com/lucesgabriel/jesuspormaria.git
+cd jesuspormaria
 ```
 
 ### 2. Instalar dependencias
@@ -160,7 +160,7 @@ Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 
 ## 📞 Soporte
 
-- **Issues**: [GitHub Issues](https://github.com/TU_USUARIO/biblia-jerusalen-catolica/issues)
+- **Issues**: [GitHub Issues](https://github.com/lucesgabriel/jesuspormaria/issues)
 - **Documentación**: Ver archivos `DEPLOYMENT.md` y `CHANGELOG.md`
 - **Status del proyecto**: Ver `STATUS.md`
 
