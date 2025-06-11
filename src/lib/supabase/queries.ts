@@ -210,8 +210,8 @@ export async function searchVerses(
   offset: number = 0
 ): Promise<SearchResult[]> {
   try {
-    // Búsqueda básica por texto
-    const { data, error } = await supabase
+    // Primero intentamos búsqueda de texto completo con configuración española
+    const { data: fullTextData, error: fullTextError } = await supabase
       .from('verses')
       .select(`
         *,
@@ -223,18 +223,40 @@ export async function searchVerses(
       .textSearch('texto', query, { type: 'websearch', config: 'spanish' })
       .range(offset, offset + limit - 1)
 
-    if (error) {
-      console.error('Error in search:', error)
-      throw error
+    let finalData = fullTextData
+    let finalError = fullTextError
+
+    // Si la búsqueda de texto completo no encuentra resultados, hacemos búsqueda simple con ILIKE
+    if (!fullTextData || fullTextData.length === 0) {
+      console.log('🔄 Fallback a búsqueda ILIKE para:', query)
+      const { data: iLikeData, error: iLikeError } = await supabase
+        .from('verses')
+        .select(`
+          *,
+          chapters!inner(
+            numero,
+            books!inner(nombre, abreviatura)
+          )
+        `)
+        .ilike('texto', `%${query}%`)
+        .range(offset, offset + limit - 1)
+
+      finalData = iLikeData
+      finalError = iLikeError
     }
 
-    // Registrar búsqueda si hay usuario
-    if (userId && data?.length) {
-      await registerSearchHistory(userId, query, data.length)
+    if (finalError) {
+      console.error('Error in search:', finalError)
+      throw finalError
+    }
+
+    // Registrar búsqueda si hay usuario y resultados
+    if (userId && finalData?.length) {
+      await registerSearchHistory(userId, query, finalData.length)
     }
 
     // Transformar resultados
-    return data?.map(verse => {
+    return (finalData || []).map(verse => {
       const chapter = verse.chapters as { numero: number; books: { nombre: string; abreviatura: string } }
       return {
         ...verse,
@@ -242,7 +264,7 @@ export async function searchVerses(
         book_abbreviation: chapter.books.abreviatura,
         chapter_number: chapter.numero
       }
-    }) || []
+    })
 
   } catch (error) {
     console.error('Error searching verses:', error)

@@ -11,17 +11,15 @@ import {
   Loader2, 
   BookOpen, 
   Hash, 
-  Clock, 
-  TrendingUp,
+  Clock,
   X
 } from 'lucide-react'
 import { 
   searchVerses, 
   searchByReference, 
-  getUserSearchHistory, 
-  getPopularSearches 
+  getUserSearchHistory
 } from '@/lib/supabase/queries'
-import type { SearchResult, SearchSuggestion, SearchHistory } from '@/types/database.types'
+import type { SearchResult, SearchHistory } from '@/types/database.types'
 // Configuración de búsqueda
 const SEARCH_CONFIG = {
   MIN_QUERY_LENGTH: 2,
@@ -34,7 +32,6 @@ export default function BuscarPage() {
   // Estados principales
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
-  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([])
   const [searchHistory, setSearchHistory] = useState<SearchHistory[]>([])
   
   // Estados de UI
@@ -108,7 +105,7 @@ export default function BuscarPage() {
     return () => clearTimeout(timeoutId)
   }, [query, performSearch])
 
-  // Cargar historial y sugerencias al montar
+  // Cargar historial al montar
   useEffect(() => {
     const loadInitialData = async () => {
       try {
@@ -120,11 +117,6 @@ export default function BuscarPage() {
           setSearchHistory(history)
           console.log(`📜 Historial cargado: ${history.length} búsquedas`)
         }
-
-        // Cargar búsquedas populares
-        const popular = await getPopularSearches(SEARCH_CONFIG.MAX_SUGGESTIONS)
-        setSuggestions(popular)
-        console.log(`🔥 Sugerencias populares: ${popular.length}`)
 
       } catch (error) {
         console.error('❌ Error cargando datos iniciales:', error)
@@ -236,47 +228,23 @@ export default function BuscarPage() {
           </div>
 
           {/* Sugerencias */}
-          {showSuggestions && (suggestions.length > 0 || searchHistory.length > 0) && (
+          {showSuggestions && searchHistory.length > 0 && (
             <Card className="absolute z-10 w-full mt-2 shadow-lg">
               <CardContent className="p-0">
-                {/* Historial del usuario */}
+                {/* Solo historial del usuario - Eliminamos búsquedas populares */}
                 {searchHistory.length > 0 && (
-                  <div className="p-3 border-b">
+                  <div className="p-3">
                     <div className="flex items-center gap-2 mb-2">
                       <Clock className="h-4 w-4 text-muted-foreground" />
                       <span className="text-sm font-medium text-muted-foreground">Búsquedas recientes</span>
                     </div>
-                    {searchHistory.slice(0, 3).map((item) => (
+                    {searchHistory.slice(0, 5).map((item) => (
                       <button
                         key={item.id}
                         className="block w-full text-left px-2 py-1 text-sm hover:bg-muted rounded text-muted-foreground"
                         onClick={() => handleSuggestionSelect(item.query)}
                       >
                         {item.query}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {/* Búsquedas populares */}
-                {suggestions.length > 0 && (
-                  <div className="p-3">
-                    <div className="flex items-center gap-2 mb-2">
-                      <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm font-medium text-muted-foreground">Búsquedas populares</span>
-                    </div>
-                    {suggestions.slice(0, 5).map((suggestion, index) => (
-                      <button
-                        key={index}
-                        className="block w-full text-left px-2 py-1 text-sm hover:bg-muted rounded text-muted-foreground"
-                        onClick={() => handleSuggestionSelect(suggestion.query)}
-                      >
-                        <span>{suggestion.query}</span>
-                        {suggestion.frequency && (
-                          <span className="text-xs text-muted-foreground ml-2">
-                            ({suggestion.frequency})
-                          </span>
-                        )}
                       </button>
                     ))}
                   </div>
