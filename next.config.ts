@@ -1,10 +1,24 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   // Configuración para Netlify
   trailingSlash: false,
   images: {
     unoptimized: true
+  },
+  // Webpack configuration to handle path resolution for Netlify
+  webpack: (config) => {
+    // Add alias for path resolution
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, 'src'),
+      '@/components': path.resolve(__dirname, 'src/components'),
+      '@/lib': path.resolve(__dirname, 'src/lib'),
+      '@/types': path.resolve(__dirname, 'src/types'),
+    };
+    
+    return config;
   },
   // Headers básicos (CSP se maneja en middleware.ts)
   async headers() {
