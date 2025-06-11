@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Button } from '@/components/ui/button'
-import { RefreshCw, Smartphone } from 'lucide-react'
+import { RefreshCw, Smartphone, Wifi, WifiOff } from 'lucide-react'
 
 interface MobileErrorBoundaryProps {
   children: React.ReactNode
@@ -11,6 +11,7 @@ interface MobileErrorBoundaryProps {
 interface ErrorBoundaryState {
   hasError: boolean
   errorMessage: string
+  errorType: 'network' | 'rsc' | 'mobile' | 'general'
 }
 
 export class MobileErrorBoundary extends React.Component<
@@ -19,52 +20,134 @@ export class MobileErrorBoundary extends React.Component<
 > {
   constructor(props: MobileErrorBoundaryProps) {
     super(props)
-    this.state = { hasError: false, errorMessage: '' }
+    this.state = { 
+      hasError: false, 
+      errorMessage: '', 
+      errorType: 'general' 
+    }
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    // Detectar errores específicos de dispositivos móviles
-    const isMobileError = 
-      error.message.includes('touch') ||
-      error.message.includes('viewport') ||
-      error.message.includes('orientation') ||
-      error.message.includes('mobile') ||
-      error.message.includes('touch-action')
+    console.error('Error capturado por MobileErrorBoundary:', error)
+    
+    // Detectar tipos específicos de errores
+    const errorMessage = error.message.toLowerCase()
+    
+    let errorType: ErrorBoundaryState['errorType'] = 'general'
+    let friendlyMessage = 'Ha ocurrido un error inesperado'
+    
+    // Errores de RSC payload
+    if (errorMessage.includes('rsc payload') || errorMessage.includes('failed to fetch')) {
+      errorType = 'rsc'
+      friendlyMessage = 'Error de conexión al servidor'
+    }
+    // Errores de red
+    else if (errorMessage.includes('network') || errorMessage.includes('fetch') || errorMessage.includes('connect')) {
+      errorType = 'network'
+      friendlyMessage = 'Error de conexión de red'
+    }
+    // Errores específicos de móviles
+    else if (
+      errorMessage.includes('touch') ||
+      errorMessage.includes('viewport') ||
+      errorMessage.includes('orientation') ||
+      errorMessage.includes('mobile')
+    ) {
+      errorType = 'mobile'
+      friendlyMessage = 'Error de compatibilidad móvil'
+    }
 
     return {
       hasError: true,
-      errorMessage: isMobileError 
-        ? 'Error de compatibilidad móvil detectado'
-        : 'Ha ocurrido un error inesperado'
+      errorMessage: friendlyMessage,
+      errorType
     }
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Mobile Error Boundary caught an error:', error, errorInfo)
+    console.error('MobileErrorBoundary - Error details:', {
+      error: error.message,
+      stack: error.stack,
+      componentStack: errorInfo.componentStack,
+      timestamp: new Date().toISOString()
+    })
     
-    // Reportar errores específicos de móviles
+    // Reportar información del dispositivo si está disponible
     if (typeof window !== 'undefined') {
-      const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      )
-      
-      if (isMobile) {
-        console.log('Error occurred on mobile device:', {
-          userAgent: navigator.userAgent,
-          viewport: {
-            width: window.innerWidth,
-            height: window.innerHeight
-          },
-          error: error.message
-        })
+      const deviceInfo = {
+        userAgent: navigator.userAgent,
+        viewport: {
+          width: window.innerWidth,
+          height: window.innerHeight
+        },
+        connection: (navigator as any).connection?.effectiveType || 'unknown',
+        online: navigator.onLine,
+        url: window.location.href,
+        referrer: document.referrer
       }
+      
+      console.log('Device info when error occurred:', deviceInfo)
     }
   }
 
   handleReload = () => {
-    this.setState({ hasError: false, errorMessage: '' })
+    this.setState({ hasError: false, errorMessage: '', errorType: 'general' })
+    
     if (typeof window !== 'undefined') {
+      // Limpiar cache del navegador si es posible
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => {
+            caches.delete(name)
+          })
+        })
+      }
+      
+      // Recargar la página
       window.location.reload()
+    }
+  }
+
+  handleRetry = () => {
+    this.setState({ hasError: false, errorMessage: '', errorType: 'general' })
+  }
+
+  getIcon = () => {
+    switch (this.state.errorType) {
+      case 'network':
+      case 'rsc':
+        return <WifiOff className="h-16 w-16 text-muted-foreground" />
+      case 'mobile':
+        return <Smartphone className="h-16 w-16 text-muted-foreground" />
+      default:
+        return <RefreshCw className="h-16 w-16 text-muted-foreground" />
+    }
+  }
+
+  getTroubleshootingTips = () => {
+    switch (this.state.errorType) {
+      case 'network':
+      case 'rsc':
+        return [
+          '• Verificar tu conexión a internet',
+          '• Intentar cambiar de WiFi a datos móviles',
+          '• Desactivar VPN si está activa',
+          '• Esperar unos segundos y reintentar'
+        ]
+      case 'mobile':
+        return [
+          '• Rotar tu dispositivo',
+          '• Actualizar tu navegador',
+          '• Limpiar la caché del navegador',
+          '• Usar el navegador en modo incógnito'
+        ]
+      default:
+        return [
+          '• Actualizar la página',
+          '• Cerrar y abrir el navegador',
+          '• Reiniciar la aplicación',
+          '• Contactar soporte si persiste'
+        ]
     }
   }
 
@@ -74,7 +157,7 @@ export class MobileErrorBoundary extends React.Component<
         <div className="min-h-screen flex items-center justify-center bg-background px-4">
           <div className="max-w-md w-full text-center space-y-6">
             <div className="flex justify-center">
-              <Smartphone className="h-16 w-16 text-muted-foreground" />
+              {this.getIcon()}
             </div>
             
             <div className="space-y-2">
@@ -82,29 +165,55 @@ export class MobileErrorBoundary extends React.Component<
                 {this.state.errorMessage}
               </h1>
               <p className="text-muted-foreground">
-                Parece que hay un problema con la visualización en tu dispositivo.
+                {this.state.errorType === 'rsc' && 'Problema de comunicación con el servidor.'}
+                {this.state.errorType === 'network' && 'Revisa tu conexión a internet.'}
+                {this.state.errorType === 'mobile' && 'Problema de visualización en tu dispositivo.'}
+                {this.state.errorType === 'general' && 'Algo salió mal, pero lo podemos arreglar.'}
               </p>
             </div>
 
-            <div className="space-y-4">
-              <Button 
-                onClick={this.handleReload} 
-                className="w-full"
-                size="lg"
-              >
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Reintentar
-              </Button>
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Button 
+                  onClick={this.handleRetry} 
+                  className="flex-1"
+                  variant="outline"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Reintentar
+                </Button>
+                
+                <Button 
+                  onClick={this.handleReload} 
+                  className="flex-1"
+                >
+                  <Wifi className="mr-2 h-4 w-4" />
+                  Recargar
+                </Button>
+              </div>
               
               <div className="text-sm text-muted-foreground space-y-2">
-                <p>Si el problema persiste, intenta:</p>
+                <p className="font-medium">Si el problema persiste:</p>
                 <ul className="text-left space-y-1">
-                  <li>• Rotar tu dispositivo</li>
-                  <li>• Actualizar tu navegador</li>
-                  <li>• Limpiar la caché del navegador</li>
+                  {this.getTroubleshootingTips().map((tip, index) => (
+                    <li key={index}>{tip}</li>
+                  ))}
                 </ul>
               </div>
             </div>
+
+            {process.env.NODE_ENV === 'development' && (
+              <details className="text-xs text-left bg-muted p-2 rounded">
+                <summary className="cursor-pointer font-medium">
+                  Información técnica (desarrollo)
+                </summary>
+                <pre className="mt-2 whitespace-pre-wrap">
+                  Error Type: {this.state.errorType}{'\n'}
+                  User Agent: {typeof window !== 'undefined' ? navigator.userAgent : 'N/A'}{'\n'}
+                  Online: {typeof window !== 'undefined' ? navigator.onLine : 'N/A'}
+                </pre>
+              </details>
+            )}
           </div>
         </div>
       )
