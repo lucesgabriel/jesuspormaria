@@ -90,7 +90,7 @@ export class MobileErrorBoundary extends React.Component<
           width: window.innerWidth,
           height: window.innerHeight
         },
-        connection: (navigator as any).connection?.effectiveType || 'unknown',
+        connection: 'connection' in navigator ? (navigator as unknown as { connection?: { effectiveType?: string } }).connection?.effectiveType || 'unknown' : 'unknown',
         online: navigator.onLine,
         url: window.location.href,
         referrer: document.referrer,
