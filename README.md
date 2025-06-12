@@ -18,7 +18,7 @@ Una aplicación web moderna para leer la Biblia Jerusalén Católica con sistema
 
 ## 🚀 Demo en Vivo
 
-🌐 **Sitio Web**: [https://jesuspormaria-2.netlify.app](https://jesuspormaria-2.netlify.app)
+🌐 **Sitio Web**: [https://bibliajerusalen.netlify.app](https://bibliajerusalen.netlify.app)
 
 ---
 

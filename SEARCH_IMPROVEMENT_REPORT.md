@@ -114,7 +114,7 @@ if (!fullTextResults || fullTextResults.length === 0) {
 ## 🚀 Deploy y Disponibilidad
 
 ### **Información del Deploy:**
-- **URL**: https://jesuspormaria-2.netlify.app/buscar
+- **URL**: https://bibliajerusalen.netlify.app/buscar
 - **Estado**: ✅ ACTIVO
 - **Deploy automático**: ✅ Activado tras push
 - **Funcionamiento**: ✅ Verificado
@@ -182,4 +182,4 @@ Las mejoras implementadas han solucionado exitosamente los problemas identificad
 
 *Reporte generado automáticamente - Enero 2025*  
 *Sistema: Biblia Jerusalén Católica*  
-*Deploy: https://jesuspormaria-2.netlify.app* 
+*Deploy: https://bibliajerusalen.netlify.app* 

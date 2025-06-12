@@ -4,7 +4,7 @@
 
 **Estado**: ✅ **FASE 1 COMPLETADA** - Búsqueda funcional implementada  
 **Commit**: `d91ba45` - "🚀 BÚSQUEDA INTELIGENTE: Funcional, tiempo real, sugerencias automáticas y parser de referencias"  
-**URL**: https://jesuspormaria-2.netlify.app
+**URL**: https://bibliajerusalen.netlify.app
 
 ---
 
@@ -199,7 +199,7 @@ const referencePatterns = [
 - [x] Responsive en móviles
 
 ### **Para Testing Manual:**
-1. Visitar: https://jesuspormaria-2.netlify.app/buscar
+1. Visitar: https://bibliajerusalen.netlify.app/buscar
 2. Probar diferentes tipos de búsqueda
 3. Verificar sugerencias automáticas
 4. Comprobar highlighting de resultados

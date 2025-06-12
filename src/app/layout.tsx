@@ -6,7 +6,7 @@ import { MobileErrorBoundary } from '@/components/ui/mobile-error-boundary'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NODE_ENV === 'production' 
-    ? 'https://jesuspormaria-2.netlify.app' 
+    ? 'https://bibliajerusalen.netlify.app' 
     : 'http://localhost:3000'),
   title: 'Biblia Jerusalén Católica',
   description: 'Aplicación web para la lectura y búsqueda de la Biblia Jerusalén Católica con sistema de favoritos y notas personales.',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'es_ES',
-    url: 'https://jesuspormaria-2.netlify.app',
+    url: 'https://bibliajerusalen.netlify.app',
     siteName: 'Biblia Jerusalén Católica',
     title: 'Biblia Jerusalén Católica',
     description: 'Lee y estudia la Biblia Jerusalén Católica con favoritos y notas personales',

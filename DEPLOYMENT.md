@@ -15,7 +15,7 @@
 
 ## 🚀 Información del Deploy
 
-- **Sitio**: https://jesuspormaria-2.netlify.app
+- **Sitio**: https://bibliajerusalen.netlify.app
 - **Admin URL**: https://app.netlify.com/projects/jesuspormaria-2
 - **Site ID**: 410b5156-b193-492b-b3a3-12fac7eb7f99
 - **Deploy ID**: 684895185dab5d4f846e87ad (✅ ACTIVO - CORREGIDO)
@@ -207,7 +207,7 @@ Configurados en `netlify.toml`:
 - [x] ✅ Build exitoso sin errores críticos
 - [x] ✅ Redirects configurados correctamente
 - [x] ✅ Headers de seguridad aplicados
-- [x] ✅ Sitio accesible en https://jesuspormaria-2.netlify.app
+- [x] ✅ Sitio accesible en https://bibliajerusalen.netlify.app
 - [ ] ⏳ Variables de entorno de producción configuradas
 - [ ] ⏳ Testing de funcionalidades en producción
 - [ ] ⏳ Configuración de dominio personalizado (opcional)

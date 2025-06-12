@@ -2,7 +2,7 @@
 
 ## ✅ **DEPLOYMENT EXITOSO EN NETLIFY**
 
-**🌐 Sitio en Vivo**: https://jesuspormaria-2.netlify.app
+**🌐 Sitio en Vivo**: https://bibliajerusalen.netlify.app
 
 ---
 
@@ -138,7 +138,7 @@ React Hook useEffect has missing dependencies
 
 ## 🔗 **Enlaces Importantes**
 
-- **🌐 Sitio Web**: https://jesuspormaria-2.netlify.app
+- **🌐 Sitio Web**: https://bibliajerusalen.netlify.app
 - **⚙️ Admin Panel**: https://app.netlify.com/projects/jesuspormaria-2
 - **📊 Build Logs**: https://app.netlify.com/projects/jesuspormaria-2/deploys/6848999c942c784a97042335
 - **💾 Repositorio Local**: `D:\Programing Language html css js php DB\09062025\biblia-jerusalen-app`

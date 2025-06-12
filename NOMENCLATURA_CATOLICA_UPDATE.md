@@ -124,7 +124,7 @@ Según la investigación con **Perplexity**, la tradición católica hispanohabl
 - **Commit**: `b8fe5d9` 
 - **GitHub**: Cambios subidos exitosamente
 - **Netlify**: Deploy automático activado
-- **URL**: https://jesuspormaria-2.netlify.app/buscar
+- **URL**: https://bibliajerusalen.netlify.app/buscar
 
 ---
 
@@ -140,7 +140,7 @@ Según la investigación con **Perplexity**, la tradición católica hispanohabl
 
 **Para probar los cambios:**
 
-1. Visitar: https://jesuspormaria-2.netlify.app/buscar
+1. Visitar: https://bibliajerusalen.netlify.app/buscar
 2. Probar búsquedas con nomenclatura católica:
    - `Juan 3,16` ✅ 
    - `Mateo 5,3-16` ✅
