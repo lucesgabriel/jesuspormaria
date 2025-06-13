@@ -5,7 +5,7 @@ import { useUser, UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Book, Search, Menu, Home, Heart } from 'lucide-react'
 import { useState } from 'react'
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
 export function Header() {
   const { isSignedIn, user } = useUser()
@@ -99,30 +99,54 @@ export function Header() {
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <SheetHeader className="sr-only">
-                <SheetTitle>Menú de navegación</SheetTitle>
-              </SheetHeader>
-              <nav className="flex flex-col space-y-4">
-                <div className="flex items-center space-x-2 pb-4">
+            <SheetContent side="right" className="w-[90vw] max-w-xs p-0">
+              {/* DialogTitle accesible para screen readers */}
+              <span className="sr-only" role="heading" aria-level={1}>Menú de navegación</span>
+              <div className="flex flex-col h-full">
+                {/* Logo y título */}
+                <div className="flex items-center gap-2 px-5 pt-5 pb-2 border-b">
                   <Book className="h-6 w-6 text-primary" />
-                  <span className="font-bold">Biblia Jerusalén</span>
+                  <span className="font-bold text-lg">Biblia Jerusalén</span>
                 </div>
-                {navigation.map((item) => {
-                  const Icon = item.icon
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="flex items-center space-x-2 text-lg font-medium"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Icon className="h-5 w-5" />
-                      <span>{item.name}</span>
-                    </Link>
-                  )
-                })}
-              </nav>
+                {/* Autenticación en móvil */}
+                {!isSignedIn && (
+                  <div className="flex flex-col gap-2 px-5 pt-4 pb-2 border-b">
+                    <Button variant="ghost" size="sm" asChild className="w-full justify-start">
+                      <Link href="/sign-in" onClick={() => setIsOpen(false)}>Iniciar sesión</Link>
+                    </Button>
+                    <Button size="sm" asChild className="w-full justify-start">
+                      <Link href="/sign-up" onClick={() => setIsOpen(false)}>Registrarse</Link>
+                    </Button>
+                  </div>
+                )}
+                {/* Navegación */}
+                <nav className="flex flex-col gap-1 px-2 py-4 flex-1 overflow-y-auto">
+                  {navigation.map((item) => {
+                    const Icon = item.icon
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="flex items-center gap-3 rounded-md px-4 py-3 text-base font-medium text-foreground/90 hover:bg-accent/60 transition-colors"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        <Icon className="h-5 w-5" />
+                        <span>{item.name}</span>
+                      </Link>
+                    )
+                  })}
+                </nav>
+                {/* Si está logueado, mostrar UserButton en el footer del sidebar */}
+                {isSignedIn && (
+                  <div className="flex items-center gap-2 px-5 py-3 border-t">
+                    <UserButton 
+                      appearance={{ elements: { avatarBox: "h-8 w-8" } }}
+                      afterSignOutUrl="/"
+                    />
+                    <span className="text-sm text-muted-foreground">{user?.firstName || 'Usuario'}</span>
+                  </div>
+                )}
+              </div>
             </SheetContent>
           </Sheet>
         </div>

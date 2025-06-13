@@ -192,7 +192,7 @@ export function FavoriteNotes({
                 Notas del versículo
               </DialogTitle>
               <div className="text-sm text-muted-foreground text-left">
-                {bookName} {chapterNumber}:{verseNumber}
+                {bookName} {chapterNumber},{verseNumber}
               </div>
             </DialogHeader>
 
