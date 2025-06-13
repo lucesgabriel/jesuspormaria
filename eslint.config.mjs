@@ -13,4 +13,12 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
+// Excepción: permitir require() solo en archivos de configuración JS
+eslintConfig.push({
+  files: ["next.config.js"],
+  rules: {
+    "@typescript-eslint/no-require-imports": "off"
+  }
+});
+
 export default eslintConfig;
